@@ -1,4 +1,15 @@
 import { test, expect } from '@playwright/test';
+test('profile menu opens settings and signs out of demo', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'ทดลองใช้ด้วยข้อมูลสาธิต' }).click();
+  await page.getByRole('button', { name: 'เปิดบัญชีของฉัน' }).click();
+  await expect(page.getByRole('button', { name: 'ตั้งค่า', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'ตั้งค่า', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'โปรไฟล์และการตั้งค่า' })).toBeVisible();
+  await page.getByRole('button', { name: 'เปิดบัญชีของฉัน' }).click();
+  await page.getByRole('button', { name: 'ออกจากโหมดสาธิต', exact: true }).first().click();
+  await expect(page.getByRole('button', { name: 'เริ่มต้นใช้งาน', exact: true })).toBeVisible();
+});
 test('guest searches Thai guides and private records require login', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
