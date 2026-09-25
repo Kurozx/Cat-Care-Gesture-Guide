@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Cat Care & Gesture Guide",
+    "slug": "cat-care-gesture-guide",
+    "scheme": "catcare",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,12 +10,14 @@
     "ios": {
       "supportsTablet": true
     },
+    "plugins": ["expo-notifications", ["expo-image-picker", {"photosPermission":"เลือกรูปสำหรับโปรไฟล์ของคุณ", "cameraPermission":false, "microphonePermission":false}]],
     "android": {
+      "package": "com.catcare.gestureguide",
+      "allowBackup": false,
+      "blockedPermissions": ["android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#FFF0E4",
+        "foregroundImage": "./assets/icon.png"
       },
       "predictiveBackGestureEnabled": false
     },

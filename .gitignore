@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules/
+.vercel/
 
 # Expo
 .expo/
@@ -31,6 +32,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -38,4 +40,10 @@ yarn-error.*
 
 # generated native folders
 /ios
-/android
+# Keep Android Studio project in the deliverable.
+android/.gradle/
+android/.kotlin/
+android/local.properties
+android/build/
+android/app/build/
+dist-android/
