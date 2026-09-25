@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 test('profile menu opens settings and signs out of demo', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'ทดลองใช้ด้วยข้อมูลสาธิต' }).click();
+  await expect(page.getByLabel('รูปโปรไฟล์ของฉัน')).toBeVisible();
   await page.getByRole('button', { name: 'เปิดบัญชีของฉัน' }).click();
   await expect(page.getByRole('button', { name: 'ตั้งค่า', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'ตั้งค่า', exact: true }).click();
