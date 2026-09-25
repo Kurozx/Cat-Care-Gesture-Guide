@@ -7,7 +7,14 @@ async function rpc(name: string, args: Record<string, unknown>) {
   return data;
 }
 export async function adminRecords(table: AdminTable, page = 0): Promise<AdminRecord[]> {
-  return rpc('admin_records', { target_table: table, page_number: page });
+  const rows: AdminRecord[] = await rpc('admin_records', { target_table: table, page_number: page });
+  if (table !== 'cat_owners') return rows;
+  const withPhotos = rows.filter(row => typeof row.avatar_path === 'string' && row.avatar_path);
+  if (!withPhotos.length) return rows;
+  const { data, error } = await client().storage.from('profile-avatars').createSignedUrls(withPhotos.map(row => row.avatar_path), 3600);
+  if (error) return rows;
+  withPhotos.forEach((row, index) => { row.avatar_url = data?.[index]?.signedUrl; });
+  return rows;
 }
 export async function adminChoices(table: 'homes' | 'cats' | 'cat_owners') {
   const result: AdminRecord[] = [];

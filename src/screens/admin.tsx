@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button, Card, Chip, Field, Heading, s } from '../ui';
+import { Button, Card, Chip, Field, Heading, ProfileAvatar, s } from '../ui';
 import { useApp } from '../state';
 import { useTask } from './manage';
 import { adminChoices, adminDelete, adminRecords, adminSave, adminUpdateUser, type AdminRecord, type AdminTable } from '../data/admin';
@@ -74,7 +74,7 @@ export function Admin() {
       {!['cat_owners','admin_actions'].includes(table)&&<Button title={`เพิ่ม${sections.find(x=>x[0]===table)?.[1]}`} loading={task.busy} onPress={()=>void task.run(create)} />}
       {table==='cat_owners'&&<Text style={s.muted}>บัญชีใหม่สมัครผ่านหน้าสมัครสมาชิก และเริ่มต้นด้วยสิทธิ์ User เสมอ</Text>}
       {ready&&!filtered.length&&<Text style={s.muted}>ไม่พบข้อมูล</Text>}
-      {filtered.map(row=><Card key={row.id}><Text style={s.h3}>{titleOf(row)}</Text>
+      {filtered.map(row=><Card key={row.id}><View style={s.row}>{table==='cat_owners'&&<ProfileAvatar uri={row.avatar_url} size={56} label={`รูปโปรไฟล์ ${row.full_name || row.username}`} />}<Text style={[s.h3,{flex:1}]}>{titleOf(row)}</Text></View>
         <Text style={s.muted}>{table==='cat_owners'?`@${row.username} · ${row.role}\n${row.email}\n${row.email_confirmed_at?'ยืนยันอีเมลแล้ว':'รอยืนยันอีเมล'}`:table==='guides'?`${row.category} · ${row.published?'เผยแพร่':'ฉบับร่าง'}`:table==='admin_actions'?`${row.target_table} · ${row.target_id}\n${row.created_at}`:row.note||row.notes||row.location||row.behavior||'แตะแก้ไขเพื่อดูรายละเอียด'}</Text>
         {table!=='admin_actions'&&<><Button title={`แก้ไข ${titleOf(row)}`} secondary disabled={task.busy} onPress={()=>{setEdit({...row});setConfirmRole(false);}} /><Button title={`ลบ ${titleOf(row)}`} secondary disabled={task.busy||(table==='cat_owners'&&row.id===app.data?.profile.id)} onPress={()=>{setRemove(row);setConfirmation('');}} /></>}
       </Card>)}

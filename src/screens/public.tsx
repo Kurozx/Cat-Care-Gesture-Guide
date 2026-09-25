@@ -61,7 +61,7 @@ export function Auth({ navigate }: ScreenProps) {
 export function GuideDetail({ guide, navigate }: ScreenProps & { guide: Guide }) {
   const app = useApp();
   const [error, setError] = useState('');
-  return <View style={{ gap: 22 }}><View style={{ backgroundColor: colors.pale, borderRadius: 26, padding: 22, alignItems: 'center', gap: 12 }}><CatArt size={150} /><Text style={s.tag}>{guide.category}</Text></View><Heading title={guide.title} subtitle={guide.summary} /><Card><Text style={s.h3}>ท่าทางนี้บอกอะไรเรา</Text><Text style={s.text}>{guide.detail}</Text></Card><Card><View style={s.row}><Icon name="heart-outline" /><Text style={s.h3}>ดูแลเขาอย่างเข้าใจ</Text></View><Text style={s.text}>{guide.advice}</Text></Card>
+  return <View style={{ gap: 22 }}><View style={{ backgroundColor: colors.pale, borderRadius: 26, padding: 22, alignItems: 'center', gap: 12 }}><CatArt size={150} /><Text style={[s.tag, { alignSelf: 'center' }]}>{guide.category}</Text></View><Heading title={guide.title} subtitle={guide.summary} /><Card><Text style={s.h3}>ท่าทางนี้บอกอะไรเรา</Text><Text style={s.text}>{guide.detail}</Text></Card><Card><View style={s.row}><Icon name="heart-outline" /><Text style={s.h3}>ดูแลเขาอย่างเข้าใจ</Text></View><Text style={s.text}>{guide.advice}</Text></Card>
     <Button title="อ่านแหล่งอ้างอิง" secondary icon="open-in-new" onPress={() => { void Linking.openURL(guide.source_url).catch(() => setError('เปิดแหล่งอ้างอิงไม่สำเร็จ')); }} />{!!error && <Text style={s.error}>{error}</Text>}
     <Button title="บันทึกพฤติกรรมที่พบ" icon="plus" onPress={() => navigate({ name: app.mode === 'guest' ? 'auth' : 'log' })} />
     <Text style={s.muted}>หากพฤติกรรมเปลี่ยนไปหรือสงสัยว่าเจ็บป่วย ควรปรึกษาสัตวแพทย์</Text>

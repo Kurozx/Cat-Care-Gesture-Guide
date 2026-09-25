@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useApp } from '../state';
-import { Button, Card, CatArt, Chip, Field, Heading, Icon, colors, s } from '../ui';
+import { Button, Card, CatArt, Chip, Field, Heading, Icon, ProfileAvatar, colors, s } from '../ui';
 import * as repo from '../data/repository';
 import type { ScreenProps, Route } from '../navigation';
 import type { Guide } from '../types';
 import { useTask } from './manage';
-
-function ProfileAvatar({ uri, size, label }: { uri?: string; size: number; label: string }) {
-  const style = { width: size, height: size, borderRadius: size / 2, borderWidth: 4, borderColor: '#fff' };
-  if (uri) return <Image source={{ uri }} accessibilityLabel={label} style={style}/>;
-  return <View accessibilityRole="image" accessibilityLabel={label} style={[style,{backgroundColor:'#E4E6EB',overflow:'hidden',alignItems:'center'}]}>
-    <View style={{position:'absolute',top:size*0.17,width:size*0.34,height:size*0.34,borderRadius:size*0.17,backgroundColor:'#AEB4BE'}}/>
-    <View style={{position:'absolute',top:size*0.55,width:size*0.78,height:size*0.65,borderTopLeftRadius:size*0.4,borderTopRightRadius:size*0.4,backgroundColor:'#AEB4BE'}}/>
-  </View>;
-}
 
 export function Account({ navigate }: ScreenProps) {
   const app = useApp(); const task = useTask(); const [reset, setReset] = useState(false);

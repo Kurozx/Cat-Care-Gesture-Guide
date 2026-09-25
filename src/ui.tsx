@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 import createIconSet from '@expo/vector-icons/createIconSet';
 import glyphMap from '@expo/vector-icons/build/vendor/react-native-vector-icons/glyphmaps/MaterialCommunityIcons.json';
 import Svg, { Circle, Path, Ellipse } from 'react-native-svg';
@@ -10,6 +10,14 @@ const MaterialCommunityIcons = createIconSet(glyphMap, 'material-community', req
 export const colors = { orange: '#E75C19', dark: '#33251F', muted: '#8C7B70', cream: '#FFF9F3', pale: '#FFF0E4', line: '#F0DCCF', green: '#42846C', red: '#BE423D' };
 export type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 export const Icon = ({ name, size = 24, color = colors.orange }: { name: string; size?: number; color?: string }) => <MaterialCommunityIcons accessible={false} aria-hidden name={name as IconName} size={size} color={color} />;
+export function ProfileAvatar({ uri, size, label }: { uri?: string; size: number; label: string }) {
+  const style = { width: size, height: size, borderRadius: size / 2, borderWidth: 4, borderColor: '#fff' };
+  if (uri) return <Image source={{ uri }} accessibilityLabel={label} style={style} />;
+  return <View accessibilityRole="image" accessibilityLabel={label} style={[style, { backgroundColor: '#E4E6EB', overflow: 'hidden', alignItems: 'center' }]}>
+    <View style={{ position: 'absolute', top: size * 0.17, width: size * 0.34, height: size * 0.34, borderRadius: size * 0.17, backgroundColor: '#AEB4BE' }} />
+    <View style={{ position: 'absolute', top: size * 0.55, width: size * 0.78, height: size * 0.65, borderTopLeftRadius: size * 0.4, borderTopRightRadius: size * 0.4, backgroundColor: '#AEB4BE' }} />
+  </View>;
+}
 export function Button({ title, onPress, secondary = false, danger = false, loading = false, disabled = false, icon }: { title: string; onPress: () => void; secondary?: boolean; danger?: boolean; loading?: boolean; disabled?: boolean; icon?: string }) {
   return <Pressable accessibilityRole="button" accessibilityLabel={title} disabled={disabled || loading} onPress={onPress} style={({ pressed }) => [s.button, secondary && s.secondary, danger && { backgroundColor: colors.red }, (pressed || disabled || loading) && { opacity: 0.6 }]}>{loading ? <ActivityIndicator color={secondary ? colors.orange : '#fff'} /> : <>{icon && <Icon name={icon} size={20} color={secondary ? colors.orange : '#fff'} />}<Text style={[s.buttonText, secondary && { color: colors.orange }]}>{title}</Text></>}</Pressable>;
 }
