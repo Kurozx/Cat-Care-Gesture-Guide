@@ -47,7 +47,12 @@ test('demo persists log CRUD and manages cats, vaccinations and profile', async 
   await page.getByRole('button', { name: 'แมวและบ้านของเรา', exact: true }).click();
   await page.getByRole('button', { name: 'เพิ่มโปรไฟล์แมว', exact: true }).click();
   await page.getByLabel('ชื่อแมว', { exact: true }).fill('ส้มทดสอบ');
-  await page.getByLabel('สายพันธุ์', { exact: true }).fill('แมวไทย');
+  await page.getByRole('button', { name: 'สายพันธุ์', exact: true }).click();
+  await page.getByRole('button', { name: 'เลือกสายพันธุ์ แมวไทย' }).click();
+  await expect(page.getByText('หมายเลขไมโครชิป')).toHaveCount(0);
+  await page.getByRole('button', { name: 'วันเกิด', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'เลือกปี' })).toBeVisible();
+  await page.getByRole('button', { name: 'เลือกวันที่ 1', exact: true }).click();
   await page.getByRole('button', { name: 'บันทึกโปรไฟล์แมว' }).click();
   await expect(page.getByRole('button', { name: 'แก้ไข ส้มทดสอบ', exact: true })).toBeVisible();
   await page.getByRole('tab', { name: 'บัญชี', exact: true }).click();
