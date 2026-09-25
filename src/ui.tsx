@@ -1,7 +1,11 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import createIconSet from '@expo/vector-icons/createIconSet';
+import glyphMap from '@expo/vector-icons/build/vendor/react-native-vector-icons/glyphmaps/MaterialCommunityIcons.json';
 import Svg, { Circle, Path, Ellipse } from 'react-native-svg';
+
+// Keep the font outside node_modules so deployment asset filters include it.
+const MaterialCommunityIcons = createIconSet(glyphMap, 'material-community', require('../assets/MaterialCommunityIcons.ttf'));
 
 export const colors = { orange: '#E75C19', dark: '#33251F', muted: '#8C7B70', cream: '#FFF9F3', pale: '#FFF0E4', line: '#F0DCCF', green: '#42846C', red: '#BE423D' };
 export type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
