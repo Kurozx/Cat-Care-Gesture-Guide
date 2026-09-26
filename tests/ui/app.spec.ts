@@ -1,4 +1,19 @@
 import { test, expect } from '@playwright/test';
+test('registration follows the required fields and centers its title', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'เริ่มต้นใช้งาน', exact: true }).click();
+  await page.getByRole('button', { name: 'ยังไม่มีบัญชี · สมัครสมาชิก' }).click();
+  const heading = page.getByRole('heading', { name: 'สร้างบัญชีผู้ใช้' });
+  await expect(heading).toBeVisible();
+  await expect(page.getByText('เริ่มดูแลเจ้าเหมียวอย่างใกล้ชิด')).toHaveCount(0);
+  await expect(page.getByLabel('โทรศัพท์ (ไม่บังคับ)')).toHaveCount(0);
+  for (const label of ['ชื่อ', 'นามสกุล', 'อีเมล', 'ชื่อผู้ใช้', 'รหัสผ่าน']) await expect(page.getByLabel(label, { exact: true })).toBeVisible();
+  const box = await heading.boundingBox();
+  expect(box).not.toBeNull();
+  expect(Math.abs(box!.x + box!.width / 2 - 393 / 2)).toBeLessThan(3);
+  await page.getByRole('button', { name: 'สมัครสมาชิก', exact: true }).click();
+  await expect(page.getByText('กรุณากรอกชื่อและนามสกุล')).toBeVisible();
+});
 test('profile menu opens settings and signs out of demo', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'ทดลองใช้ด้วยข้อมูลสาธิต' }).click();

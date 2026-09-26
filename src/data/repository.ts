@@ -161,13 +161,13 @@ export async function signIn(identifier: string, password: string) {
   if (result.error || !result.data?.access_token) throw new Error('เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่าน หากเพิ่งสมัคร ให้กดลิงก์ยืนยันในอีเมลก่อน (ตรวจสอบโฟลเดอร์สแปมด้วย) หรือลองเข้าสู่ระบบด้วยอีเมลเพื่อดูสาเหตุเพิ่มเติม');
   check(await client().auth.setSession({ access_token: result.data.access_token, refresh_token: result.data.refresh_token }));
 }
-export async function signUp(input: { username: string; full_name: string; phone: string; email: string; password: string }) {
+export async function signUp(input: { username: string; full_name: string; email: string; password: string }) {
   const username = input.username.trim().toLowerCase();
   if (!/^[a-z0-9_]{3,30}$/.test(username)) throw new Error('ชื่อผู้ใช้ใช้ a-z, 0-9 หรือ _ จำนวน 3–30 ตัว');
   required(input.full_name, 'ชื่อและนามสกุล', 120);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.trim())) throw new Error('กรุณากรอกอีเมลให้ถูกต้อง');
   if (input.password.length < 8) throw new Error('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร');
-  const result = await client().auth.signUp({ email: input.email.trim(), password: input.password, options: { emailRedirectTo: confirmationRedirect(), data: { username, full_name: input.full_name.trim(), phone: input.phone.trim() } } });
+  const result = await client().auth.signUp({ email: input.email.trim(), password: input.password, options: { emailRedirectTo: confirmationRedirect(), data: { username, full_name: input.full_name.trim() } } });
   if (result.error) throw new Error(emailAuthError(result.error));
   return check(result);
 }
