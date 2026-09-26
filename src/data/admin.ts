@@ -29,6 +29,6 @@ export async function adminSave(table: AdminTable, id: string | null, payload: R
 export async function adminUpdateUser(user: AdminRecord) {
   return rpc('admin_update_user', { target_user: user.id, new_name: user.full_name, new_phone: user.phone, new_role: user.role });
 }
-export async function adminDelete(table: AdminTable, id: string, confirmation: string) {
-  return rpc('admin_delete_record', { target_table: table, record_id: id, confirmation });
+export async function adminDelete(table: AdminTable, id: string) {
+  return rpc('admin_delete_record', { target_table: table, record_id: id, confirmation: 'DELETE' });
 }

@@ -22,7 +22,7 @@ export function Admin() {
   const app = useApp(); const task = useTask();
   const [table,setTable] = useState<AdminTable>('guides'); const [rows,setRows] = useState<AdminRecord[]>([]);
   const [page,setPage] = useState(0); const [query,setQuery] = useState(''); const [ready,setReady] = useState(false);
-  const [edit,setEdit] = useState<AdminRecord|null>(null); const [remove,setRemove] = useState<AdminRecord|null>(null); const [confirmation,setConfirmation] = useState(''); const [confirmRole,setConfirmRole] = useState(false);
+  const [edit,setEdit] = useState<AdminRecord|null>(null); const [remove,setRemove] = useState<AdminRecord|null>(null); const [confirmRole,setConfirmRole] = useState(false);
   const [choices,setChoices] = useState<{homes:AdminRecord[];cats:AdminRecord[];cat_owners:AdminRecord[]}>({homes:[],cats:[],cat_owners:[]});
   const permitted = app.mode === 'live' && app.data?.profile.role === 'admin';
   useEffect(() => {
@@ -68,7 +68,7 @@ export function Admin() {
       {confirmRole && <Text style={s.error}>ยืนยันเปลี่ยนบทบาท @{edit.username} เป็น {edit.role}? แอดมินสามารถจัดการข้อมูลและสิทธิ์ผู้ใช้ทั้งหมดได้</Text>}
       <Button title={confirmRole?'ยืนยันเปลี่ยนบทบาทและบันทึก':'บันทึกข้อมูล'} loading={task.busy} onPress={()=>{if(table==='cat_owners'&&rows.find(r=>r.id===edit.id)?.role!==edit.role&&!confirmRole){setConfirmRole(true);return;}void task.run(save);}} />
       <Button title="ยกเลิก" secondary disabled={task.busy} onPress={()=>{setEdit(null);setConfirmRole(false);}} />
-    </Card> : remove ? <Card><Heading title={`ลบ ${titleOf(remove)}`} /><Text style={s.error}>{table==='homes'?'การลบบ้านจะลบแมว บันทึก วัคซีน และสมาชิกในบ้านนี้ด้วย':table==='cats'?'การลบแมวจะลบบันทึกและวัคซีนของแมวนี้ด้วย':table==='cat_owners'?'การลบบัญชีจะทำให้เข้าสู่ระบบไม่ได้ หากยังมีบ้านหรือประวัติบันทึก ระบบจะไม่อนุญาตให้ลบ':'ข้อมูลนี้จะถูกลบถาวร'}{'\n'}พิมพ์ DELETE เพื่อยืนยัน</Text><Field label="ยืนยันการลบ" value={confirmation} onChangeText={setConfirmation} autoCapitalize="characters" /><Button title="ยืนยันลบถาวร" danger loading={task.busy} disabled={confirmation!=='DELETE'} onPress={()=>void task.run(async()=>{await adminDelete(table,remove.id,confirmation);setRemove(null);await reload();app.setNotice('ลบข้อมูลแล้ว');})} /><Button title="ยกเลิก" secondary disabled={task.busy} onPress={()=>setRemove(null)} /></Card> : <>
+    </Card> : remove ? <Card><Heading title={`ลบ ${titleOf(remove)}`} /><Text style={s.error}>{table==='homes'?'การลบบ้านจะลบแมว บันทึก วัคซีน และสมาชิกในบ้านนี้ด้วย':table==='cats'?'การลบแมวจะลบบันทึกและวัคซีนของแมวนี้ด้วย':table==='cat_owners'?'การลบบัญชีจะทำให้เข้าสู่ระบบไม่ได้ หากยังมีบ้านหรือประวัติบันทึก ระบบจะไม่อนุญาตให้ลบ':'ข้อมูลนี้จะถูกลบถาวร'}</Text><Button title="ยืนยันลบถาวร" danger loading={task.busy} onPress={()=>void task.run(async()=>{await adminDelete(table,remove.id);setRemove(null);await reload();app.setNotice('ลบข้อมูลแล้ว');})} /><Button title="ยกเลิก" secondary disabled={task.busy} onPress={()=>setRemove(null)} /></Card> : <>
       <Field label="ค้นหาในหน้านี้" value={query} onChangeText={setQuery} />
       <View style={s.row}><Text style={[s.h3,{flex:1}]}>{sections.find(x=>x[0]===table)?.[1]} · หน้า {page+1}</Text><Button title="รีเฟรช" secondary loading={task.busy} onPress={()=>void task.run(reload)} /></View>
       {!['cat_owners','admin_actions'].includes(table)&&<Button title={`เพิ่ม${sections.find(x=>x[0]===table)?.[1]}`} loading={task.busy} onPress={()=>void task.run(create)} />}
@@ -76,7 +76,7 @@ export function Admin() {
       {ready&&!filtered.length&&<Text style={s.muted}>ไม่พบข้อมูล</Text>}
       {filtered.map(row=><Card key={row.id}><View style={s.row}>{table==='cat_owners'&&<ProfileAvatar uri={row.avatar_url} size={56} label={`รูปโปรไฟล์ ${row.full_name || row.username}`} />}<Text style={[s.h3,{flex:1}]}>{titleOf(row)}</Text></View>
         <Text style={s.muted}>{table==='cat_owners'?`@${row.username} · ${row.role}\n${row.email}\n${row.email_confirmed_at?'ยืนยันอีเมลแล้ว':'รอยืนยันอีเมล'}`:table==='guides'?`${row.category} · ${row.published?'เผยแพร่':'ฉบับร่าง'}`:table==='admin_actions'?`${row.target_table} · ${row.target_id}\n${row.created_at}`:row.note||row.notes||row.location||row.behavior||'แตะแก้ไขเพื่อดูรายละเอียด'}</Text>
-        {table!=='admin_actions'&&<><Button title={`แก้ไข ${titleOf(row)}`} secondary disabled={task.busy} onPress={()=>{setEdit({...row});setConfirmRole(false);}} /><Button title={`ลบ ${titleOf(row)}`} secondary disabled={task.busy||(table==='cat_owners'&&row.id===app.data?.profile.id)} onPress={()=>{setRemove(row);setConfirmation('');}} /></>}
+        {table!=='admin_actions'&&<><Button title={`แก้ไข ${titleOf(row)}`} secondary disabled={task.busy} onPress={()=>{setEdit({...row});setConfirmRole(false);}} /><Button title={`ลบ ${titleOf(row)}`} secondary disabled={task.busy||(table==='cat_owners'&&row.id===app.data?.profile.id)} onPress={()=>setRemove(row)} /></>}
       </Card>)}
       <View style={s.row}><Button title="ก่อนหน้า" secondary disabled={page===0||task.busy} onPress={()=>setPage(page-1)} /><Button title="ถัดไป" secondary disabled={rows.length<100||task.busy} onPress={()=>setPage(page+1)} /></View>
     </>}
