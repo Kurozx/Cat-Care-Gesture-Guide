@@ -2,7 +2,11 @@ import { test, expect } from '@playwright/test';
 test('registration follows the required fields and centers its title', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'เริ่มต้นใช้งาน', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'เข้าสู่ระบบ' })).toBeVisible();
+  const loginHeading = page.getByRole('heading', { name: 'เข้าสู่ระบบ' });
+  await expect(loginHeading).toBeVisible();
+  const loginBox = await loginHeading.boundingBox();
+  expect(loginBox).not.toBeNull();
+  expect(Math.abs(loginBox!.x + loginBox!.width / 2 - 393 / 2)).toBeLessThan(3);
   await expect(page.getByText('วันนี้เจ้าเหมียวของคุณเป็นอย่างไรบ้าง?')).toHaveCount(0);
   await page.getByRole('button', { name: 'ยังไม่มีบัญชี · สมัครสมาชิก' }).click();
   const heading = page.getByRole('heading', { name: 'สร้างบัญชีผู้ใช้' });
