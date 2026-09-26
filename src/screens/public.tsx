@@ -46,7 +46,7 @@ export function Auth({ navigate }: ScreenProps) {
     } catch (e) { setError(e instanceof Error ? e.message : 'ไม่สามารถเข้าสู่ระบบได้'); }
     finally { setBusy(false); }
   }
-  return <View style={{ gap: 20 }}><View style={{ alignItems: 'center' }}><CatArt size={110} /></View>{register ? <Text accessibilityRole="header" style={[s.title, { textAlign: 'center' }]}>สร้างบัญชีผู้ใช้</Text> : <Heading title="ยินดีต้อนรับกลับมา" subtitle="วันนี้เจ้าเหมียวของคุณเป็นอย่างไรบ้าง?" />}
+  return <View style={{ gap: 20 }}><View style={{ alignItems: 'center' }}><CatArt size={110} /></View>{register ? <Text accessibilityRole="header" style={[s.title, { textAlign: 'center' }]}>สร้างบัญชีผู้ใช้</Text> : <Heading title="เข้าสู่ระบบ" />}
     {!configured && <Text style={s.error}>ยังไม่ได้เชื่อมต่อ Supabase สามารถอ่านคู่มือหรือทดลองข้อมูลสาธิตก่อนได้</Text>}
     {register && <><Field label="ชื่อ" value={first} onChangeText={setFirst} /><Field label="นามสกุล" value={last} onChangeText={setLast} /></>}
     <Field label={register ? 'อีเมล' : 'อีเมลหรือชื่อผู้ใช้'} value={identifier} onChangeText={setIdentifier} autoCapitalize="none" autoCorrect={false} placeholder="you@example.com" keyboardType={register ? 'email-address' : 'default'} />
